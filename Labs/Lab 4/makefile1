@@ -1,0 +1,30 @@
+CC = gcc
+CFLAGS  = -m64 -g -Wall -nostdlib -fno-stack-protector
+LFLAGS  =
+
+# All Targets
+all: hello
+
+# Tool invocations
+# Executable "patch" depends on the files...
+
+hello: start.o task1.o lab4_util.o
+	@echo 'Building target: hello'
+	@echo 'Invoking: C Linker'
+	ld -m elf_x86_64 start.o task1.o lab4_util.o -o patch $(LFLAGS)
+	@echo 'Finished building target: hello'
+	@echo ' '
+
+# Depends on the source and header files
+task1.o: task1.c
+	$(CC) $(CFLAGS) -c -o task1.o task1.c
+
+lab4_util.o: lab4_util.c
+	$(CC) $(CFLAGS) -c -o lab4_util.o lab4_util.c
+
+start.o: start.s
+	nasm -f elf64  -o start.o start.s
+
+#Clean the build directory
+clean:
+	rm -f *.o patch
